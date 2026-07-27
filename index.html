@@ -58,7 +58,6 @@
         .custom-lang-switcher .select-items div { padding: 10px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
         .custom-lang-switcher .select-items div:hover { background-color: var(--bg-color); }
         .custom-lang-switcher .select-show { display: block; }
-        /* --------------------------------------- */
 
         .grid-layout {
             display: grid;
@@ -67,12 +66,8 @@
         }
 
         @media (min-width: 768px) {
-            .grid-layout {
-                grid-template-columns: 1fr 1fr;
-            }
-            .full-width {
-                grid-column: 1 / -1;
-            }
+            .grid-layout { grid-template-columns: 1fr 1fr; }
+            .full-width { grid-column: 1 / -1; }
         }
 
         .card {
@@ -84,68 +79,27 @@
             flex-direction: column;
         }
 
-        .card-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin: 0 0 20px 0;
-        }
+        .card-title { font-size: 18px; font-weight: 600; margin: 0 0 20px 0; }
 
         .daily-scale { margin-bottom: 15px; }
-        .scale-header {
-            display: flex;
-            justify-content: space-between;
-            font-size: 14px;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .scale-track {
-            width: 100%;
-            height: 14px;
-            background-color: var(--border-color);
-            border-radius: 7px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .scale-fill {
-            height: 100%;
-            width: 0%;
-            border-radius: 7px;
-            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
+        .scale-header { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; font-weight: 500; }
+        .scale-track { width: 100%; height: 14px; background-color: var(--border-color); border-radius: 7px; overflow: hidden; position: relative; }
+        .scale-fill { height: 100%; width: 0%; border-radius: 7px; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        
         .fill-red { background-color: var(--accent-red); }
         .fill-green { background-color: var(--accent-green); }
         .fill-blue { background-color: var(--accent-blue); }
 
-        .input-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
+        .input-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border-color); }
         .input-row:last-child { border-bottom: none; }
-
-        .input-label-container {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-        }
-
+        .input-label-container { display: flex; flex-direction: column; flex: 1; }
         .input-title { font-size: 16px; font-weight: 500; }
         .input-total { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
-
-        .input-controls {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
+        
+        .input-controls { display: flex; gap: 8px; align-items: center; }
 
         input[type="number"] {
-            width: 70px;
+            width: 60px;
             font-size: 16px;
             text-align: right;
             border: 1px solid var(--border-color);
@@ -170,61 +124,22 @@
             justify-content: center;
             transition: transform 0.1s;
         }
-
         .add-btn:active { transform: scale(0.9); }
-
-        .progress-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .progress-item {
-            background: #F9F9FB;
-            padding: 12px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-        }
-
-        .progress-header {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-            text-align: center;
-            font-weight: 500;
-        }
-
-        .progress-track {
-            width: 100%;
-            height: 8px;
-            background-color: var(--border-color);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            width: 0%;
-            background-color: var(--accent-purple);
-            transition: width 1s ease-in-out;
-        }
-
-        .reset-btn {
-            background: transparent;
-            color: var(--accent-red);
-            border: none;
-            width: 100%;
-            padding: 20px;
-            font-size: 14px;
-            cursor: pointer;
-        }
         
-        .side-group {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        .edit-btn {
+            background-color: var(--border-color);
+            color: var(--text-main);
+            font-size: 16px;
         }
+
+        .progress-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-top: 15px; }
+        .progress-item { background: #F9F9FB; padding: 12px; border-radius: 12px; border: 1px solid var(--border-color); }
+        .progress-header { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; text-align: center; font-weight: 500; }
+        .progress-track { width: 100%; height: 8px; background-color: var(--border-color); border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; width: 0%; background-color: var(--accent-purple); transition: width 1s ease-in-out; }
+
+        .reset-btn { background: transparent; color: var(--accent-red); border: none; width: 100%; padding: 20px; font-size: 14px; cursor: pointer; }
+        .side-group { display: flex; flex-direction: column; gap: 20px; }
     </style>
 </head>
 <body>
@@ -233,13 +148,12 @@
     <div class="header">
         <h1 id="appTitle">Трекер</h1>
         
-        <!-- Красивый кастомный выбор языка -->
         <div class="custom-lang-switcher" id="custom-lang">
             <div class="select-selected" id="lang-current">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/White-blue-white_flag.svg" class="flag-icon"> Русский
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzIDIiPjxyZWN0IHdpZHRoPSIzIiBoZWlnaHQ9IjIiIGZpbGw9IiNmZmYiLz48cmVjdCB3aWR0aD0iMyIgaGVpZ2h0PSIwLjY2IiB5PSIwLjY2IiBmaWxsPSIjMDA4M2Q2Ii8+PC9zdmc+" class="flag-icon"> Русский
             </div>
             <div class="select-items" id="lang-list">
-               <div data-val="ru"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzIDIiPjxyZWN0IHdpZHRoPSIzIiBoZWlnaHQ9IjIiIGZpbGw9IiNmZmYiLz48cmVjdCB3aWR0aD0iMyIgaGVpZ2h0PSIwLjY2IiB5PSIwLjY2IiBmaWxsPSIjMDA4M2Q2Ii8+PC9zdmc+" class="flag-icon"> Русский</div>
+                <div data-val="ru"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzIDIiPjxyZWN0IHdpZHRoPSIzIiBoZWlnaHQ9IjIiIGZpbGw9IiNmZmYiLz48cmVjdCB3aWR0aD0iMyIgaGVpZ2h0PSIwLjY2IiB5PSIwLjY2IiBmaWxsPSIjMDA4M2Q2Ii8+PC9zdmc+" class="flag-icon"> Русский</div>
                 <div data-val="en"><img src="https://upload.wikimedia.org/wikipedia/en/a/ae/Flag_of_the_United_Kingdom.svg" class="flag-icon"> English</div>
                 <div data-val="cs"><img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Flag_of_the_Czech_Republic.svg" class="flag-icon"> Čeština</div>
                 <div data-val="fr"><img src="https://upload.wikimedia.org/wikipedia/en/c/c3/Flag_of_France.svg" class="flag-icon"> Français</div>
@@ -251,28 +165,16 @@
         <!-- Сводка -->
         <div class="card full-width">
             <h2 class="card-title" id="t_dailySummary">Сводка за день</h2>
-            
             <div class="daily-scale">
-                <div class="scale-header">
-                    <span id="t_eaten">Съедено</span>
-                    <span id="val_eaten">0 / 2500 ккал</span>
-                </div>
+                <div class="scale-header"><span id="t_eaten">Съедено</span><span id="val_eaten">0 / 2500 ккал</span></div>
                 <div class="scale-track"><div class="scale-fill fill-red" id="bar_eaten"></div></div>
             </div>
-
             <div class="daily-scale">
-                <div class="scale-header">
-                    <span id="t_burned">Потрачено (BMR + Активность)</span>
-                    <span id="val_burned">0 ккал</span>
-                </div>
+                <div class="scale-header"><span id="t_burned">Потрачено (BMR + Активность)</span><span id="val_burned">0 ккал</span></div>
                 <div class="scale-track"><div class="scale-fill fill-green" id="bar_burned"></div></div>
             </div>
-
             <div class="daily-scale">
-                <div class="scale-header">
-                    <span id="t_deficit">Дневной дефицит</span>
-                    <span id="val_deficit">0 ккал</span>
-                </div>
+                <div class="scale-header"><span id="t_deficit">Дневной дефицит</span><span id="val_deficit">0 ккал</span></div>
                 <div class="scale-track"><div class="scale-fill fill-blue" id="bar_deficit"></div></div>
             </div>
         </div>
@@ -288,6 +190,7 @@
                 </div>
                 <div class="input-controls">
                     <input type="number" id="inp_breakfast" placeholder="0">
+                    <button class="add-btn edit-btn" onclick="editEntry('breakfast')">✏️</button>
                     <button class="add-btn" onclick="addEntry('breakfast')">+</button>
                 </div>
             </div>
@@ -299,6 +202,7 @@
                 </div>
                 <div class="input-controls">
                     <input type="number" id="inp_lunch" placeholder="0">
+                    <button class="add-btn edit-btn" onclick="editEntry('lunch')">✏️</button>
                     <button class="add-btn" onclick="addEntry('lunch')">+</button>
                 </div>
             </div>
@@ -310,6 +214,7 @@
                 </div>
                 <div class="input-controls">
                     <input type="number" id="inp_dinner" placeholder="0">
+                    <button class="add-btn edit-btn" onclick="editEntry('dinner')">✏️</button>
                     <button class="add-btn" onclick="addEntry('dinner')">+</button>
                 </div>
             </div>
@@ -321,6 +226,7 @@
                 </div>
                 <div class="input-controls">
                     <input type="number" id="inp_snack" placeholder="0">
+                    <button class="add-btn edit-btn" onclick="editEntry('snack')">✏️</button>
                     <button class="add-btn" onclick="addEntry('snack')">+</button>
                 </div>
             </div>
@@ -337,6 +243,7 @@
                     </div>
                     <div class="input-controls">
                         <input type="number" id="inp_active" placeholder="0">
+                        <button class="add-btn edit-btn" onclick="editEntry('active')">✏️</button>
                         <button class="add-btn" onclick="addEntry('active')">+</button>
                     </div>
                 </div>
@@ -369,35 +276,34 @@
 </div>
 
 <script>
-    // --- Данные переводов ---
     const dict = {
         ru: {
             title: "Трекер", dailySummary: "Сводка за день", eaten: "Съедено", burned: "Потрачено (BMR + Актив)", 
             deficit: "Дневной дефицит", foodLog: "Запись еды", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", 
             snack: "Перекус", activityLog: "Запись активности", active: "Тренировки / Шаги", weightLog: "Динамика веса",
-            currentWeight: "Текущий вес", globalGoal: "Глобальная цель (6 кг)", 
-            reset: "Сбросить абсолютно всё", kg: "кг", kcal: "ккал"
+            currentWeight: "Текущий вес", globalGoal: "Глобальная цель (6 кг)", reset: "Сбросить абсолютно всё", 
+            kg: "кг", kcal: "ккал", invalidNum: "Введите число (0 или больше) для замены"
         },
         en: {
             title: "Tracker", dailySummary: "Daily Summary", eaten: "Eaten", burned: "Burned (BMR + Active)", 
             deficit: "Daily Deficit", foodLog: "Food Log", breakfast: "Breakfast", lunch: "Lunch", dinner: "Dinner", 
             snack: "Snacks", activityLog: "Activity Log", active: "Workouts / Steps", weightLog: "Weight Tracking",
-            currentWeight: "Current Weight", globalGoal: "Global Goal (6 kg)", 
-            reset: "Reset absolutely everything", kg: "kg", kcal: "kcal"
+            currentWeight: "Current Weight", globalGoal: "Global Goal (6 kg)", reset: "Reset absolutely everything", 
+            kg: "kg", kcal: "kcal", invalidNum: "Enter a number (0 or more) to replace"
         },
         cs: {
             title: "Sledování", dailySummary: "Denní přehled", eaten: "Snědeno", burned: "Spáleno (BMR + Aktivita)", 
             deficit: "Denní deficit", foodLog: "Záznam jídla", breakfast: "Snídaně", lunch: "Oběd", dinner: "Večeře", 
             snack: "Svačina", activityLog: "Záznam aktivity", active: "Trénink / Kroky", weightLog: "Sledování hmotnosti",
-            currentWeight: "Aktuální hmotnost", globalGoal: "Celkový cíl (6 kg)", 
-            reset: "Vymazat úplně všechno", kg: "kg", kcal: "kcal"
+            currentWeight: "Aktuální hmotnost", globalGoal: "Celkový cíl (6 kg)", reset: "Vymazat úplně všechno", 
+            kg: "kg", kcal: "kcal", invalidNum: "Zadejte číslo (0 nebo více) pro nahrazení"
         },
         fr: {
             title: "Suivi", dailySummary: "Résumé Quotidien", eaten: "Mangé", burned: "Brûlé (Métabolisme + Actif)", 
             deficit: "Déficit Quotidien", foodLog: "Journal Alimentaire", breakfast: "Petit-déjeuner", lunch: "Déjeuner", dinner: "Dîner", 
             snack: "Collation", activityLog: "Journal d'Activité", active: "Entraînements / Pas", weightLog: "Suivi du poids",
-            currentWeight: "Poids actuel", globalGoal: "Objectif Global (6 kg)", 
-            reset: "Tout réinitialiser", kg: "kg", kcal: "kcal"
+            currentWeight: "Poids actuel", globalGoal: "Objectif Global (6 kg)", reset: "Tout réinitialiser", 
+            kg: "kg", kcal: "kcal", invalidNum: "Entrez un nombre (0 ou plus) pour remplacer"
         }
     };
 
@@ -410,8 +316,6 @@
 
     const KCAL_PER_KG = 7700;
     const TARGET_KG = 6;
-    
-    // Вводные данные для BMR
     const HEIGHT = 181;
     const AGE = 24;
     const GENDER_MODIFIER = 5;
@@ -427,7 +331,6 @@
         active: 0
     };
 
-    // --- Логика выпадающего меню ---
     function setupCustomLangDropdown() {
         const langCurrent = document.getElementById("lang-current");
         const langList = document.getElementById("lang-list");
@@ -448,17 +351,11 @@
 
     function changeLanguage(langCode, save = true) {
         currentLang = langCode;
-        if(save) {
-            localStorage.setItem('lang', currentLang);
-        }
-        
-        // Обновляем визуальную часть выпадающего списка
+        if(save) localStorage.setItem('lang', currentLang);
         document.getElementById('lang-current').innerHTML = `<img src="${flagData[langCode].img}" class="flag-icon"> ${flagData[langCode].name}`;
-        
         applyTranslations();
         updateUI();
     }
-    // --------------------------------
 
     function calculateBMR() {
         return Math.round((10 * currentWeight) + (6.25 * HEIGHT) - (5 * AGE) + GENDER_MODIFIER);
@@ -477,17 +374,13 @@
         localStorage.setItem('dailyData', JSON.stringify(dailyData));
     }
 
-    // Отрисовка ампул для 6 кг
     const progressContainer = document.getElementById('progressContainer');
     for (let i = 0; i < TARGET_KG; i++) {
         progressContainer.innerHTML += `
             <div class="progress-item">
                 <div class="progress-header" id="label-${i}">0 / 7700</div>
-                <div class="progress-track">
-                    <div class="progress-fill" id="fill-${i}"></div>
-                </div>
-            </div>
-        `;
+                <div class="progress-track"><div class="progress-fill" id="fill-${i}"></div></div>
+            </div>`;
     }
 
     function applyTranslations() {
@@ -510,20 +403,38 @@
         document.getElementById('t_reset').innerText = d.reset;
     }
 
+    // Прибавление калорий
     function addEntry(type) {
         const input = document.getElementById(`inp_${type}`);
         const val = parseInt(input.value);
         if (!val || val <= 0) return;
 
-        if (type === 'active') {
-            dailyData.active += val;
-        } else {
-            dailyData.food[type] += val;
-        }
+        if (type === 'active') dailyData.active += val;
+        else dailyData.food[type] += val;
 
         input.value = '';
         localStorage.setItem('dailyData', JSON.stringify(dailyData));
         confetti({ particleCount: 30, spread: 40, origin: { y: 0.8 }, colors: ['#007AFF', '#34C759'] });
+        updateUI();
+    }
+
+    // Полная перезапись калорий (редактирование)
+    function editEntry(type) {
+        const input = document.getElementById(`inp_${type}`);
+        const val = parseInt(input.value);
+        
+        if (isNaN(val) || val < 0) {
+            alert(dict[currentLang].invalidNum);
+            return;
+        }
+
+        if (type === 'active') dailyData.active = val;
+        else dailyData.food[type] = val;
+
+        input.value = '';
+        localStorage.setItem('dailyData', JSON.stringify(dailyData));
+        // Серый салют как индикатор успешного редактирования
+        confetti({ particleCount: 20, spread: 30, origin: { y: 0.8 }, colors: ['#8A8A8E', '#E5E5EA'] });
         updateUI();
     }
 
@@ -597,7 +508,6 @@
         }
     }
 
-    // Запуск приложения
     setupCustomLangDropdown();
     changeLanguage(currentLang, false);
 
