@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Deficit Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #F2F2F7;
+            --card-bg: #FFFFFF;
+            --text-main: #000000;
+            --text-secondary: #8A8A8E;
+            --accent-blue: #007AFF;
+            --accent-green: #34C759;
+            --accent-red: #FF3B30;
+            --accent-purple: #AF52DE;
+            --border-color: #E5E5EA;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 900px;
+            padding-bottom: 40px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        /* --- Кастомный выбор языка с картинками --- */
+        .lang-selector {
+            position: relative;
+            font-size: 15px;
+            user-select: none;
+        }
+
+        .lang-active {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .lang-active img, .lang-option img {
+            width: 22px;
+            height: 15px;
+            object-fit: cover;
+            border-radius: 2px;
+            box-shadow: 0 0 2px rgba(0,0,0,0.3);
+        }
+
+        .lang-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 6px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            z-index: 100;
+            overflow: hidden;
+            width: 140px;
+        }
+
+        .lang-dropdown.show {
+            display: block;
+        }
+
+        .lang-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .lang-option:hover {
+            background: var(--bg-color);
+        }
+
+        .lang-option:not(:last-child) {
+            border-bottom: 1px solid var(--border-color);
+        }
+        /* ------------------------------------------- */
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .grid-layout {
+                grid-template-columns: 1fr 1fr;
+            }
+            .full-width {
+                grid-column: 1 / -1;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 20px 0;
+        }
+
+        .daily-scale { margin-bottom: 15px; }
+        .scale-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .scale-track {
+            width: 100%;
+            height: 14px;
+            background-color: var(--border-color);
+            border-radius: 7px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .scale-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 7px;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fill-red { background-color: var(--accent-red); }
+        .fill-green { background-color: var(--accent-green); }
+        .fill-blue { background-color: var(--accent-blue); }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .input-row:last-child { border-bottom: none; }
+
+        .input-label-container {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .input-title { font-size: 16px; font-weight: 500; }
+        .input-total { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+
+        .input-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        input[type="number"] {
+            width: 70px;
+            font-size: 16px;
+            text-align: right;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px;
+            background: #FAFAFC;
+            outline: none;
+        }
+
+        .add-btn {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            width: 34px;
+            height: 34px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.1s;
+        }
+
+        .add-btn:active { transform: scale(0.9); }
+
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .progress-item {
+            background: #F9F9FB;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .progress-header {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            background-color: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background-color: var(--accent-purple);
+            transition: width 1s ease-in-out;
+        }
+
+        .reset-btn {
+            background: transparent;
+            color: var(--accent-red);
+            border: none;
+            width: 100%;
+            padding: 20px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .side-group {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">
+        <h1 id="appTitle">Трекер</h1>
+        
+        <!-- Кастомное меню языков -->
+        <div class="lang-selector">
+            <div class="lang-active" onclick="toggleLangDropdown(event)">
+                <img id="activeFlagImg" src="https://upload.wikimedia.org/wikipedia/commons/3/3a/White-blue-white_flag.svg" alt="flag">
+                <span id="activeLangName">Русский</span>
+            </div>
+            
+            <div class="lang-dropdown" id="langDropdown">
+                <div class="lang-option" onclick="changeLanguage('ru')">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/White-blue-white_flag.svg" alt="ru"> Русский
+                </div>
+                <div class="lang-option" onclick="changeLanguage('en')">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/a/ae/Flag_of_the_United_Kingdom.svg" alt="en"> English
+                </div>
+                <div class="lang-option" onclick="changeLanguage('cs')">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Flag_of_the_Czech_Republic.svg" alt="cs"> Čeština
+                </div>
+                <div class="lang-option" onclick="changeLanguage('fr')">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/c/c3/Flag_of_France.svg" alt="fr"> Français
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-layout">
+        <div class="card full-width">
+            <h2 class="card-title" id="t_dailySummary">Сводка за день</h2>
+            
+            <div class="daily-scale">
+                <div class="scale-header">
+                    <span id="t_eaten">Съедено</span>
+                    <span id="val_eaten">0 / 2500 ккал</span>
+                </div>
+                <div class="scale-track"><div class="scale-fill fill-red" id="bar_eaten"></div></div>
+            </div>
+
+            <div class="daily-scale">
+                <div class="scale-header">
+                    <span id="t_burned">Потрачено (BMR + Активность)</span>
+                    <span id="val_burned">0 ккал</span>
+                </div>
+                <div class="scale-track"><div class="scale-fill fill-green" id="bar_burned"></div></div>
+            </div>
+
+            <div class="daily-scale">
+                <div class="scale-header">
+                    <span id="t_deficit">Дневной дефицит</span>
+                    <span id="val_deficit">0 ккал</span>
+                </div>
+                <div class="scale-track"><div class="scale-fill fill-blue" id="bar_deficit"></div></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title" id="t_foodLog">Запись еды</h2>
+            
+            <div class="input-row">
+                <div class="input-label-container">
+                    <span class="input-title" id="t_breakfast">Завтрак</span>
+                    <span class="input-total" id="tot_breakfast">0 ккал</span>
+                </div>
+                <div class="input-controls">
+                    <input type="number" id="inp_breakfast" placeholder="0">
+                    <button class="add-btn" onclick="addEntry('breakfast')">+</button>
+                </div>
+            </div>
+            
+            <div class="input-row">
+                <div class="input-label-container">
+                    <span class="input-title" id="t_lunch">Обед</span>
+                    <span class="input-total" id="tot_lunch">0 ккал</span>
+                </div>
+                <div class="input-controls">
+                    <input type="number" id="inp_lunch" placeholder="0">
+                    <button class="add-btn" onclick="addEntry('lunch')">+</button>
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="input-label-container">
+                    <span class="input-title" id="t_dinner">Ужин</span>
+                    <span class="input-total" id="tot_dinner">0 ккал</span>
+                </div>
+                <div class="input-controls">
+                    <input type="number" id="inp_dinner" placeholder="0">
+                    <button class="add-btn" onclick="addEntry('dinner')">+</button>
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="input-label-container">
+                    <span class="input-title" id="t_snack">Перекус</span>
+                    <span class="input-total" id="tot_snack">0 ккал</span>
+                </div>
+                <div class="input-controls">
+                    <input type="number" id="inp_snack" placeholder="0">
+                    <button class="add-btn" onclick="addEntry('snack')">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="side-group">
+            <div class="card">
+                <h2 class="card-title" id="t_activityLog">Запись активности</h2>
+                <div class="input-row">
+                    <div class="input-label-container">
+                        <span class="input-title" id="t_active">Тренировки / Шаги</span>
+                        <span class="input-total" id="tot_active">0 ккал</span>
+                    </div>
+                    <div class="input-controls">
+                        <input type="number" id="inp_active" placeholder="0">
+                        <button class="add-btn" onclick="addEntry('active')">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title" id="t_weightLog">Динамика веса</h2>
+                <div class="input-row">
+                    <div class="input-label-container">
+                        <span class="input-title" id="t_currentWeight">Текущий вес</span>
+                        <span class="input-total" id="val_bmr">BMR: --</span>
+                    </div>
+                    <div class="input-controls">
+                        <input type="number" id="inp_weight" step="0.1" placeholder="77.4">
+                        <button class="add-btn" onclick="updateWeight()">✓</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card full-width">
+            <h2 class="card-title" id="t_globalGoal">Глобальная цель (6 кг)</h2>
+            <p style="font-size: 14px; color: var(--text-secondary); margin-top: -10px;" id="globalStatsText">Сброшено: 0 / 6 кг</p>
+            <div class="progress-grid" id="progressContainer"></div>
+        </div>
+    </div>
+
+    <button class="reset-btn" id="t_reset" onclick="resetAll()">Сбросить абсолютно всё</button>
+</div>
+
+<script>
+    const dict = {
+        ru: {
+            title: "Трекер", dailySummary: "Сводка за день", eaten: "Съедено", burned: "Потрачено (BMR + Актив)", 
+            deficit: "Дневной дефицит", foodLog: "Запись еды", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", 
+            snack: "Перекус", activityLog: "Запись активности", active: "Тренировки / Шаги", weightLog: "Динамика веса",
+            currentWeight: "Текущий вес", globalGoal: "Глобальная цель (6 кг)", 
+            reset: "Сбросить абсолютно всё", kg: "кг", kcal: "ккал"
+        },
+        en: {
+            title: "Tracker", dailySummary: "Daily Summary", eaten: "Eaten", burned: "Burned (BMR + Active)", 
+            deficit: "Daily Deficit", foodLog: "Food Log", breakfast: "Breakfast", lunch: "Lunch", dinner: "Dinner", 
+            snack: "Snacks", activityLog: "Activity Log", active: "Workouts / Steps", weightLog: "Weight Tracking",
+            currentWeight: "Current Weight", globalGoal: "Global Goal (6 kg)", 
+            reset: "Reset absolutely everything", kg: "kg", kcal: "kcal"
+        },
+        cs: {
+            title: "Sledování", dailySummary: "Denní přehled", eaten: "Snědeno", burned: "Spáleno (BMR + Aktivita)", 
+            deficit: "Denní deficit", foodLog: "Záznam jídla", breakfast: "Snídaně", lunch: "Oběd", dinner: "Večeře", 
+            snack: "Svačina", activityLog: "Záznam aktivity", active: "Trénink / Kroky", weightLog: "Sledování hmotnosti",
+            currentWeight: "Aktuální hmotnost", globalGoal: "Celkový cíl (6 kg)", 
+            reset: "Vymazat úplně všechno", kg: "kg", kcal: "kcal"
+        },
+        fr: {
+            title: "Suivi", dailySummary: "Résumé Quotidien", eaten: "Mangé", burned: "Brûlé (Métabolisme + Actif)", 
+            deficit: "Déficit Quotidien", foodLog: "Journal Alimentaire", breakfast: "Petit-déjeuner", lunch: "Déjeuner", dinner: "Dîner", 
+            snack: "Collation", activityLog: "Journal d'Activité", active: "Entraînements / Pas", weightLog: "Suivi du poids",
+            currentWeight: "Poids actuel", globalGoal: "Objectif Global (6 kg)", 
+            reset: "Tout réinitialiser", kg: "kg", kcal: "kcal"
+        }
+    };
+
+    const flagData = {
+        ru: { name: "Русский", img: "https://upload.wikimedia.org/wikipedia/commons/3/3a/White-blue-white_flag.svg" },
+        en: { name: "English", img: "https://upload.wikimedia.org/wikipedia/en/a/ae/Flag_of_the_United_Kingdom.svg" },
+        cs: { name: "Čeština", img: "https://upload.wikimedia.org/wikipedia/commons/c/cb/Flag_of_the_Czech_Republic.svg" },
+        fr: { name: "Français", img: "https://upload.wikimedia.org/wikipedia/en/c/c3/Flag_of_France.svg" }
+    };
+
+    const KCAL_PER_KG = 7700;
+    const TARGET_KG = 6;
+    
+    // Твои константы для BMR
+    const HEIGHT = 181;
+    const AGE = 24;
+    const GENDER_MODIFIER = 5;
+
+    let currentLang = localStorage.getItem('lang') || 'ru';
+    let totalSavedDeficit = parseInt(localStorage.getItem('totalSavedDeficit')) || 0;
+    let currentWeight = parseFloat(localStorage.getItem('currentWeight')) || 77.45;
+    
+    let today = new Date().toDateString();
+    let dailyData = JSON.parse(localStorage.getItem('dailyData')) || {
+        date: today,
+        food: { breakfast: 0, lunch: 0, dinner: 0, snack: 0 },
+        active: 0
+    };
+
+    // Настройка меню языков
+    function toggleLangDropdown(event) {
+        event.stopPropagation();
+        document.getElementById('langDropdown').classList.toggle('show');
+    }
+
+    // Закрытие меню при клике мимо
+    window.onclick = function(event) {
+        if (!event.target.matches('.lang-active') && !event.target.closest('.lang-active')) {
+            let dropdowns = document.getElementsByClassName("lang-dropdown");
+            for (let i = 0; i < dropdowns.length; i++) {
+                if (dropdowns[i].classList.contains('show')) {
+                    dropdowns[i].classList.remove('show');
+                }
+            }
+        }
+    }
+
+    function calculateBMR() {
+        return Math.round((10 * currentWeight) + (6.25 * HEIGHT) - (5 * AGE) + GENDER_MODIFIER);
+    }
+
+    if (dailyData.date !== today) {
+        const yesterdayEaten = dailyData.food.breakfast + dailyData.food.lunch + dailyData.food.dinner + dailyData.food.snack;
+        const yesterdayDeficit = (calculateBMR() + dailyData.active) - yesterdayEaten;
+        
+        if (yesterdayDeficit > 0) {
+            totalSavedDeficit += yesterdayDeficit;
+            localStorage.setItem('totalSavedDeficit', totalSavedDeficit);
+        }
+        
+        dailyData = { date: today, food: { breakfast: 0, lunch: 0, dinner: 0, snack: 0 }, active: 0 };
+        localStorage.setItem('dailyData', JSON.stringify(dailyData));
+    }
+
+    const progressContainer = document.getElementById('progressContainer');
+    for (let i = 0; i < TARGET_KG; i++) {
+        progressContainer.innerHTML += `
+            <div class="progress-item">
+                <div class="progress-header" id="label-${i}">0 / 7700</div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="fill-${i}"></div>
+                </div>
+            </div>
+        `;
+    }
+
+    function initLanguage() {
+        changeLanguage(currentLang, false);
+    }
+
+    function changeLanguage(langCode, save = true) {
+        currentLang = langCode;
+        if(save) {
+            localStorage.setItem('lang', currentLang);
+        }
+        
+        document.getElementById('activeFlagImg').src = flagData[langCode].img;
+        document.getElementById('activeLangName').innerText = flagData[langCode].name;
+        document.getElementById('langDropdown').classList.remove('show');
+        
+        applyTranslations();
+        updateUI();
+    }
+
+    function applyTranslations() {
+        const d = dict[currentLang];
+        document.getElementById('appTitle').innerText = d.title;
+        document.getElementById('t_dailySummary').innerText = d.dailySummary;
+        document.getElementById('t_eaten').innerText = d.eaten;
+        document.getElementById('t_burned').innerText = d.burned;
+        document.getElementById('t_deficit').innerText = d.deficit;
+        document.getElementById('t_foodLog').innerText = d.foodLog;
+        document.getElementById('t_breakfast').innerText = d.breakfast;
+        document.getElementById('t_lunch').innerText = d.lunch;
+        document.getElementById('t_dinner').innerText = d.dinner;
+        document.getElementById('t_snack').innerText = d.snack;
+        document.getElementById('t_activityLog').innerText = d.activityLog;
+        document.getElementById('t_active').innerText = d.active;
+        document.getElementById('t_weightLog').innerText = d.weightLog;
+        document.getElementById('t_currentWeight').innerText = d.currentWeight;
+        document.getElementById('t_globalGoal').innerText = d.globalGoal;
+        document.getElementById('t_reset').innerText = d.reset;
+    }
+
+    function addEntry(type) {
+        const input = document.getElementById(`inp_${type}`);
+        const val = parseInt(input.value);
+        if (!val || val <= 0) return;
+
+        if (type === 'active') {
+            dailyData.active += val;
+        } else {
+            dailyData.food[type] += val;
+        }
+
+        input.value = '';
+        localStorage.setItem('dailyData', JSON.stringify(dailyData));
+        confetti({ particleCount: 30, spread: 40, origin: { y: 0.8 }, colors: ['#007AFF', '#34C759'] });
+        updateUI();
+    }
+
+    function updateWeight() {
+        const input = document.getElementById('inp_weight');
+        const val = parseFloat(input.value);
+        if (!val || val <= 0) return;
+        
+        currentWeight = val;
+        localStorage.setItem('currentWeight', currentWeight);
+        input.value = '';
+        
+        confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 }, colors: ['#AF52DE', '#007AFF'] });
+        updateUI();
+    }
+
+    function updateUI() {
+        const d = dict[currentLang];
+        const BMR = calculateBMR();
+        
+        document.getElementById('val_bmr').innerText = `BMR: ${BMR} ${d.kcal} (${currentWeight} ${d.kg})`;
+        document.getElementById('inp_weight').placeholder = currentWeight;
+
+        document.getElementById('tot_breakfast').innerText = `${dailyData.food.breakfast} ${d.kcal}`;
+        document.getElementById('tot_lunch').innerText = `${dailyData.food.lunch} ${d.kcal}`;
+        document.getElementById('tot_dinner').innerText = `${dailyData.food.dinner} ${d.kcal}`;
+        document.getElementById('tot_snack').innerText = `${dailyData.food.snack} ${d.kcal}`;
+        document.getElementById('tot_active').innerText = `${dailyData.active} ${d.kcal}`;
+
+        const totalEaten = dailyData.food.breakfast + dailyData.food.lunch + dailyData.food.dinner + dailyData.food.snack;
+        const totalBurned = BMR + dailyData.active;
+        const currentDeficit = totalBurned - totalEaten;
+
+        document.getElementById('val_eaten').innerText = `${totalEaten} ${d.kcal}`;
+        document.getElementById('bar_eaten').style.width = Math.min((totalEaten / 2500) * 100, 100) + '%';
+
+        document.getElementById('val_burned').innerText = `${totalBurned} ${d.kcal}`;
+        document.getElementById('bar_burned').style.width = Math.min((totalBurned / 3500) * 100, 100) + '%';
+
+        document.getElementById('val_deficit').innerText = `${Math.max(currentDeficit, 0)} ${d.kcal}`;
+        document.getElementById('bar_deficit').style.width = Math.min((Math.max(currentDeficit, 0) / 1000) * 100, 100) + '%';
+
+        let virtualTotal = totalSavedDeficit + Math.max(currentDeficit, 0);
+        if (virtualTotal > TARGET_KG * KCAL_PER_KG) virtualTotal = TARGET_KG * KCAL_PER_KG;
+        
+        let currentKgsLost = Math.floor(virtualTotal / KCAL_PER_KG);
+        document.getElementById('globalStatsText').innerText = `${currentKgsLost} / 6 ${d.kg} (${virtualTotal} ${d.kcal})`;
+
+        for (let i = 0; i < TARGET_KG; i++) {
+            let fill = document.getElementById(`fill-${i}`);
+            let label = document.getElementById(`label-${i}`);
+            let barKcal = 0;
+            
+            if (virtualTotal >= (i + 1) * KCAL_PER_KG) {
+                barKcal = KCAL_PER_KG;
+                fill.style.width = '100%';
+            } else if (virtualTotal > i * KCAL_PER_KG) {
+                barKcal = virtualTotal - (i * KCAL_PER_KG);
+                fill.style.width = (barKcal / KCAL_PER_KG) * 100 + '%';
+            } else {
+                fill.style.width = '0%';
+            }
+            label.innerText = `${barKcal} / 7700`;
+        }
+    }
+
+    function resetAll() {
+        if(confirm("Точно удалить всё? / Are you sure?")) {
+            localStorage.clear();
+            location.reload();
+        }
+    }
+
+    // Запуск инициализации при загрузке
+    initLanguage();
+</script>
+</body>
+</html>
